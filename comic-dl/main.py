@@ -1,7 +1,7 @@
 #!/bin/env python3
 
+import argparse
 import os
-import sys
 
 import bs4
 import requests
@@ -71,13 +71,20 @@ def dl_single_issue(start_url, dl_dir):
             f.write(res.content)
 
 
-def main(comic_name):
+def main(comic_name, destdir):
+    if destdir:
+        dl_dir = destdir
+    else:
+        dl_dir = DEFAULT_DL_DIR
     overview_url = BASE_URL + comic_name
     issue_urls = get_issue_urls(overview_url)
-    dl_all_issues(comic_name, issue_urls, DEFAULT_DL_DIR)
+    dl_all_issues(comic_name, issue_urls, dl_dir)
 
 
 if __name__ == '__main__':
-    if len(sys.argv) < 3:
-        print("usage: ./main.py -c comic_name")
-    main(sys.argv[2])
+    parser = argparse.ArgumentParser(description='Download comics')
+    parser.add_argument('comic_name', help='Name of comic to download')
+    parser.add_argument('-d', '--destdir', help='Destination directory of download')
+    args = parser.parse_args()
+
+    main(args.comic_name, args.destdir)
