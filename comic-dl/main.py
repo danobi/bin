@@ -36,14 +36,14 @@ def dl_all_issues(comic_name, issue_urls, dl_dir):
             if not os.path.exists(issue_dl_dir):
                 os.makedirs(issue_dl_dir)
 
-            dl_single_issue(url, issue_dl_dir)
+            dl_single_issue(idx+1, url, issue_dl_dir)
 
         except requests.HTTPError as e:
             # This is most likely hit when there's no more pages in an issue
             continue
 
 
-def dl_single_issue(start_url, dl_dir):
+def dl_single_issue(issue_num, start_url, dl_dir):
     page = 0
 
     while True:
@@ -61,7 +61,7 @@ def dl_single_issue(start_url, dl_dir):
         src = img_tag['src']
 
         # Download the image
-        print("Downloading page {0}".format(page))
+        print("Downloading issue #{0} / page {1}".format(issue_num, page))
         img_path = "{0}/{1}.jpg".format(dl_dir, page)
         if os.path.exists(img_path) and os.path.getsize(img_path):
             print("Page already exists -- skipping")
