@@ -12,13 +12,18 @@ HEADERS = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) \
             AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102   \
             Safari/537.36'}
 
-def get_issue_urls(overview_url):
+def get_issue_urls(overview_url, reverse):
     res = requests.get(overview_url)
     res.raise_for_status()
 
     soup = bs4.BeautifulSoup(res.text, "html.parser")
     raw_a_tags = soup.find_all('a', class_='ch-name')
-    return [x['href'] for x in raw_a_tags]
+    urls = [x['href'] for x in raw_a_tags]
+    urls.sort()
+    urls = list(zip(range(1, len(urls)+1), urls)) # Give each url an issue number
+    if reverse:
+        urls.reverse()
+    return urls
 
 
 def dl_all_issues(comic_name, issue_urls, dl_dir):
@@ -28,15 +33,15 @@ def dl_all_issues(comic_name, issue_urls, dl_dir):
         os.makedirs(comic_dir)
 
     # Download all the issues
-    for idx,url in enumerate(issue_urls):
+    for issue_num,url in issue_urls:
         try:
-            issue_dl_dir = "{0}/issue_{1}".format(comic_dir, idx+1)
+            issue_dl_dir = "{0}/issue_{1}".format(comic_dir, issue_num)
 
             # Create download directory for issue
             if not os.path.exists(issue_dl_dir):
                 os.makedirs(issue_dl_dir)
 
-            dl_single_issue(idx+1, url, issue_dl_dir)
+            dl_single_issue(issue_num, url, issue_dl_dir)
 
         except requests.HTTPError as e:
             # This is most likely hit when there's no more pages in an issue
@@ -71,13 +76,13 @@ def dl_single_issue(issue_num, start_url, dl_dir):
             f.write(res.content)
 
 
-def main(comic_name, destdir):
+def main(comic_name, destdir, reverse):
     if destdir:
         dl_dir = destdir
     else:
         dl_dir = DEFAULT_DL_DIR
     overview_url = BASE_URL + comic_name
-    issue_urls = get_issue_urls(overview_url)
+    issue_urls = get_issue_urls(overview_url, reverse)
     dl_all_issues(comic_name, issue_urls, dl_dir)
 
 
@@ -85,6 +90,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Download comics')
     parser.add_argument('comic_name', help='Name of comic to download')
     parser.add_argument('-d', '--destdir', help='Destination directory of download')
+    parser.add_argument('-r', '--reverse', action='store_true',
+                        help="Reverse issue download order. "
+                             "This helps to speed up downloding new issues "
+                             "to an existing comic folder.")
     args = parser.parse_args()
 
-    main(args.comic_name, args.destdir)
+    main(args.comic_name, args.destdir, args.reverse)
