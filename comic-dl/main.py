@@ -13,6 +13,15 @@ HEADERS = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) \
             Safari/537.36'}
 
 def get_issue_urls(overview_url, reverse):
+    """Get a list of all the issue urls
+
+    Args:
+        overview_url: url of the overview page of the comic
+        reverse: boolean flag indicating whether or not to reverse
+            the issue download order
+    Returns:
+        List of urls pointing to the first page of each issue
+    """
     res = requests.get(overview_url)
     res.raise_for_status()
 
@@ -27,6 +36,15 @@ def get_issue_urls(overview_url, reverse):
 
 
 def dl_all_issues(comic_name, issue_urls, dl_dir):
+    """Download all request issues
+
+    Args:
+        comic_name: name of comic we're downloading
+        issue_urls: list of urls pointing to the first page of each issue
+        dl_dir: directory to put downloaded comic
+    Returns:
+        None
+    """
     # Create directory for this comic
     comic_dir = "{0}/{1}".format(dl_dir, comic_name)
     if not os.path.exists(comic_dir):
@@ -49,6 +67,15 @@ def dl_all_issues(comic_name, issue_urls, dl_dir):
 
 
 def dl_single_issue(issue_num, start_url, dl_dir):
+    """Downloads a single issue of a comic
+
+    Args:
+        issue_num: canonical issue number
+        start_url: url pointing to the first page in the issue
+        dl_dir: where to put downloaded issue folder
+    Returns:
+        None
+    """
     page = 0
 
     while True:
