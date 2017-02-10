@@ -28,7 +28,6 @@ def get_issue_urls(overview_url, reverse):
     soup = bs4.BeautifulSoup(res.text, "html.parser")
     raw_a_tags = soup.find_all('a', class_='ch-name')
     urls = [x['href'] for x in raw_a_tags]
-    urls.sort()
     urls = list(zip(range(1, len(urls)+1), urls)) # Give each url an issue number
     if reverse:
         urls.reverse()
