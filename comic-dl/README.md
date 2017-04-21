@@ -16,9 +16,9 @@ By default, `comic-dl` downloads all existing issues. `comic-dl` also makes an e
 
 TODO
 -----
-[x] cmd line arg for download directory
+- [x] cmd line arg for download directory
 
-[ ] cmd line arg for downloading specific issue #
+- [ ] cmd line arg for downloading specific issue #
 
 
 Disclaimer
