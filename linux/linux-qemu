@@ -1,0 +1,71 @@
+#!/bin/env bash
+
+set -e
+
+help() {
+  cat << EOF
+Tool to facilitate interaction between the Linux kernel and QEMU
+
+Usage: linux-qemu [-cdgh]
+
+Options:
+    -c     run qemu in current console
+    -g     have qemu start up a gdb server
+    -d     start gdb and connect to QEMU server
+    -h     show help and exit
+
+Environment Variables:
+    LINUX: Path to Linux source tree
+    INITRAMFS: A cpio'd initramfs for the kernel to boot into
+EOF
+}
+
+LINUX=${LINUX:-~/dev/linux}
+INITRAMFS=${INITRAMFS:-~/dev/initramfs/initramfs-busybox-x86.cpio.gz}
+BZIMAGE=${LINUX}/arch/x86_64/boot/bzImage
+
+console=""
+debug=""
+gdb=""
+while getopts "cdgh" opt; do
+  case $opt in
+    c)
+      console="-nographic -append console=ttyS0"
+      ;;
+    g)
+      debug="-s -S"
+      ;;
+    d)
+      gdb=true
+      ;;
+    h)
+      help
+      exit 0
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+   esac
+done
+
+# Make sure we're only doing one thing at a time
+if [[ $gdb && ($console != "" || $debug != "") ]]; then
+  echo "error: either start QEMU or attach gdb; cannot do both"
+  exit 1
+fi
+
+if [[ $gdb ]]; then
+  gdb                                    \
+    -ex "add-auto-load-safe-path $LINUX" \
+    -ex "file ${LINUX}/vmlinux"          \
+    -ex "target remote localhost:1234"   \
+    -ex "break start_kernel"
+else
+  qemu-system-x86_64   \
+    -kernel $BZIMAGE   \
+    -initrd $INITRAMFS \
+    -enable-kvm        \
+    $console           \
+    $debug
+fi
