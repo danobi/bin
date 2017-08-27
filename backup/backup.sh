@@ -11,7 +11,7 @@ if [[ $BACKUP_REPO == "" ]]; then
 fi
 
 # Backup of /extra minus excluded directories
-borg create -v --stats                          \
+borg create -vp --stats                         \
     ${BACKUP_REPO}::'{hostname}-{now:%Y-%m-%d}' \
     /extra                                      \
     --exclude Bitcoin/                          \
