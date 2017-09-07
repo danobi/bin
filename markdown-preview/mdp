@@ -14,4 +14,4 @@ fi
 
 TMPFILE=$(mktemp -u)
 pandoc $FILE -o ${TMPFILE}.html
-gio open ${TMPFILE}.html
+xdg-open ${TMPFILE}.html
