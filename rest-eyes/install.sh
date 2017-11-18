@@ -4,7 +4,8 @@ TIMER_FILE=/etc/systemd/system/rest-eyes.timer
 SERVICE_FILE=/etc/systemd/system/rest-eyes.service
 
 echo "Installing $TIMER_FILE..."
-cat <<EOF > "$TIMER_FILE"
+tmp_timer=$(mktemp)
+cat <<EOF > $tmp_timer
 [Unit]
 Description=Shows a notification every 20m to rest your eyes
 
@@ -17,19 +18,24 @@ WantedBy=timers.target
 EOF
 
 echo "Installing $SERVICE_FILE..."
-sudo cat <<EOF > "$SERVICE_FILE"
+tmp_service=$(mktemp)
+sudo cat <<EOF > $tmp_service
 [Unit]
 Description=Shows a notification every 20m to rest your eyes
 
 [Service]
 Type=simple
-ExecStart=$HOME/scripts/rest-eyes/notify.py
+User=$USER
+Environment="DISPLAY=$DISPLAY" "DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS"
+ExecStart=$PWD/notify.py
 
 [Install]
 WantedBy=rest-eyes.timer
 EOF
 
 echo "Enabling and starting rest-eyes daemon..."
-systemctl daemon-reload
-systemctl enable rest-eyes.timer
-systemctl start rest-eyes.timer
+sudo mv $tmp_timer "$TIMER_FILE"
+sudo mv $tmp_service "$SERVICE_FILE"
+sudo systemctl daemon-reload
+sudo systemctl enable rest-eyes.timer
+sudo systemctl start rest-eyes.timer
