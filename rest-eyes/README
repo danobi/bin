@@ -1,0 +1,5 @@
+Install notify2 with `pip3 install --user notify2`.
+
+Then run `sudo ./install.sh` to install the systemd timer.
+
+NOTE: this script repo must be cloned to $HOME/scripts.
