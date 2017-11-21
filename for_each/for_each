@@ -5,6 +5,8 @@ set -u
 OPERATION="$1"
 CONTAINER="$2"
 
+trap exit 2
+
 while read -r item
 do
     $OPERATION "$item"
