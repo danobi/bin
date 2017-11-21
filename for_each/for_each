@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -u
+
+OPERATION="$1"
+CONTAINER="$2"
+
+while read -r item
+do
+    $OPERATION "$item"
+done < $CONTAINER
