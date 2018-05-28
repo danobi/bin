@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# If no file supplied, then we create a default one
+if [ -z ${1+x} ]; then
+    FILE=$(mktemp /tmp/cppsh-XXXXX.cpp)
+
+    cat << 'EOF' > "$FILE"
+#include <iostream>
+#include <string>
+
+int main() {
+    std::cout << "changeme\n";
+}
+EOF
+else
+    FILE="$1"
+fi
+OUT=$(mktemp /tmp/cppsh-aout-XXXXX)
+
+"$EDITOR" "$FILE"
+g++ --std=c++1z -o "$OUT" "$FILE"
+chmod +x "$OUT"
+echo "$FILE"
+echo "--------------------"
+"$OUT"
+
