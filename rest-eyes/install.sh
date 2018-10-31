@@ -3,6 +3,9 @@ set -eu
 TIMER_FILE=/etc/systemd/system/rest-eyes.timer
 SERVICE_FILE=/etc/systemd/system/rest-eyes.service
 
+echo "Installing python dependencies"
+pip3 install --user notify2
+
 echo "Installing $TIMER_FILE..."
 tmp_timer=$(mktemp)
 cat <<EOF > $tmp_timer
