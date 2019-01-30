@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+# Usage: `./for_each <1-arg-script> <list-of-stuff>`,
+# 
+# where the 1-arg-script is a script that takes one argument
+# and list-of-stuff is a newline separated list of args to
+# be passed in one by one to 1-arg-script.
+
+set -u
+
+OPERATION="$1"
+CONTAINER="$2"
+
+trap exit 2
+
+while read -r item
+do
+    $OPERATION "$item"
+done < $CONTAINER

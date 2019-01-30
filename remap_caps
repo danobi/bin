@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+#
+# Remaps left caps lock to a control key
 
 xmodmap -e 'keycode 66 = Control_L'
 xmodmap -e 'clear Lock'

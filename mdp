@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+#
+# Opens a preview of a Markdown file
+# 
+# Usage: ./mdp file
 
 set -eu
 
