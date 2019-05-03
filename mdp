@@ -17,5 +17,5 @@ elif [[ ! -f $FILE ]]; then
 fi
 
 TMPFILE=$(mktemp -u)
-pandoc $FILE -o ${TMPFILE}.html
+pandoc $FILE -f gfm -o ${TMPFILE}.html
 xdg-open ${TMPFILE}.html
