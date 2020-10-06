@@ -16,7 +16,7 @@ if [ -z ${1+x} ]; then
 #include <string>
 
 int main() {
-    std::cout << "changeme\n";
+    std::cout << "changeme" << std::endl;
 }
 EOF
 elif [ "$1" == "-l" ]; then
