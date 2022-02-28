@@ -20,7 +20,7 @@ fi
 # Backup of /extra minus excluded directories
 borg create -vp --stats                         \
     ${BACKUP_REPO}::'{hostname}-{now:%Y-%m-%d}' \
-    /extra                                      \
+    /extrabtrfs                                 \
     --exclude Bitcoin/                          \
     --exclude Bitcoin\ majaraja/                \
 
