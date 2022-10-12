@@ -1,6 +1,0 @@
-#!/bin/bash
-export __GL_THREADED_OPTIMIZATIONS=1
-export MESA_GLTHREAD=TRUE
-export GPU_MAX_HEAP_SIZE=100
-export GPU_MAX_ALLOC_PERCENT=100
-WINEARCH=win32 WINEPREFIX="/home/daniel/.wineprefix/LoL" WINEDEBUG=-all /opt/wine-lol/bin/wine "C:/Riot Games/League of Legends/LeagueClient.exe"

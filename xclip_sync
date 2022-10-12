@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-#
-# Copies contents of clipd into local clipboard
-
-
-clipd -p | xclip -in -selection clipboard
