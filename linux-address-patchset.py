@@ -39,9 +39,9 @@ def find_tos(patch_dir, patch):
     #
     # Otherwise, we do the standard get_maintainer.pl thing.
     emails = set()
-    if patch.name.startswith(COVER_LETTER_PREFIX):
+    if COVER_LETTER_PREFIX in patch.name:
         for other_file in patch_dir.glob("*.patch"):
-            if other_file.name.startswith(COVER_LETTER_PREFIX):
+            if COVER_LETTER_PREFIX in other_file.name:
                 continue
 
             lists = get_maintainer(
