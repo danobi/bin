@@ -18,4 +18,4 @@ OUTDIR="${ROOT}/outgoing/$(git rev-parse --abbrev-ref HEAD)"
 git format-patch -o "$OUTDIR" -s --to "" --cc "" "$1"
 
 # Add To: and Cc: based on `get_maintainer.pl`
-LINUX_ROOT="$ROOT" linux-format-patch.py "$OUTDIR"
+LINUX_ROOT="$ROOT" linux-address-patchset.py "$OUTDIR"
